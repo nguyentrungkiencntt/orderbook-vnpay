@@ -2,8 +2,8 @@
 
 function App() {
   return (
-    <div>
-       Code vite
+    <div className="text-[30px] font-bold">
+       Mới
     </div>
   )
 }
