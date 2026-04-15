@@ -3,7 +3,7 @@
 function App() {
   return (
     <div className="text-[30px] font-bold">
-       Mới
+       Mới thêm
     </div>
   )
 }
