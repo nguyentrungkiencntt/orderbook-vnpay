@@ -14,6 +14,7 @@ const EditBook = ({ book, onCancel, onSave }) => {
 
   useEffect(() => {
     if (book) {
+      // eslint-disable-next-line
       setFormData({
         title: book.title || '',
         author: book.author || '',

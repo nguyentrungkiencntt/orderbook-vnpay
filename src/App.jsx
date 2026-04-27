@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-import Home from './components/Home';
-import Category from './components/Category';
-import Cart from './components/Cart';
-import Checkout from './components/Checkout';
-import Footer from './components/Footer';
-import AdminPanel from './components/AdminPanel';
-import UserProfile from './components/UserProfile';
+import Navbar from './components/common/Navbar';
+import LoginForm from './features/auth/LoginForm';
+import RegisterForm from './features/auth/RegisterForm';
+import Home from './pages/Home';
+import Category from './features/category/Category';
+import Cart from './features/cart/Cart';
+import Checkout from './features/cart/Checkout';
+import Footer from './components/common/Footer';
+import AdminPanel from './features/admin/AdminPanel';
+import UserProfile from './features/user/UserProfile';
 import './App.css';
 
 function App() {
   const [view, setView] = useState('home');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [isAdmin, setIsAdmin] = useState(false);
 
   const handleLogin = (isAdminRole = false) => {

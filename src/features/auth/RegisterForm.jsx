@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const RegisterForm = ({ onToggle }) => {
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <section className="login-section">

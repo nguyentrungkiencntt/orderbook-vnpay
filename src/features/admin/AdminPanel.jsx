@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import AddBook from '../features/books/AddBook';
-import EditBook from '../features/books/EditBook';
-import PromotionsPanel from '../features/promotions/PromotionsPanel';
+import AddBook from '../books/AddBook';
+import EditBook from '../books/EditBook';
+import PromotionsPanel from '../promotions/PromotionsPanel';
 import './AdminPanel.css';
 import OrdersPanel from './OrdersPanel';
 import UsersPanel from './UsersPanel';
