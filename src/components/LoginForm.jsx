@@ -1,7 +1,23 @@
 import { useState } from 'react';
 
-const LoginForm = ({ onToggle }) => {
+const LoginForm = ({ onToggle, onLoginSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email === 'admin@gmail.com' && password === '123456') {
+      setError('');
+      onLoginSuccess(true); // isAdmin
+    } else if (email === 'user@example.com' && password === '123456') {
+      setError('');
+      onLoginSuccess(false); // user
+    } else {
+      setError('Email hoặc mật khẩu không chính xác!');
+    }
+  };
 
   return (
     <section className="login-section">
@@ -21,10 +37,17 @@ const LoginForm = ({ onToggle }) => {
             <p>Tiếp tục hành trình tri thức cùng chúng tôi.</p>
           </div>
 
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={handleSubmit}>
+            {error && <div style={{ color: 'red', marginBottom: '15px', fontSize: '0.9rem' }}>{error}</div>}
             <div className="input-group">
               <label>Email</label>
-              <input type="email" className="input-control" placeholder="ten@vidu.com" />
+              <input 
+                type="email" 
+                className="input-control" 
+                placeholder="ten@vidu.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
 
             <div className="input-group">
@@ -34,6 +57,8 @@ const LoginForm = ({ onToggle }) => {
                   type={showPassword ? "text" : "password"} 
                   className="input-control" 
                   placeholder="********" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button 
                   type="button" 
@@ -53,7 +78,7 @@ const LoginForm = ({ onToggle }) => {
               <a href="#" className="forgot-link">Quên mật khẩu?</a>
             </div>
 
-            <button className="btn-primary">Đăng Nhập</button>
+            <button type="submit" className="btn-primary">Đăng Nhập</button>
           </form>
 
           <div className="divider">HOẶC TIẾP TỤC VỚI</div>
@@ -68,7 +93,7 @@ const LoginForm = ({ onToggle }) => {
           </div>
 
           <div className="signup-prompt">
-            Chưa có tài khoản? <span onClick={onToggle}>Đăng ký ngay</span>
+            Chưa có tài khoản? <span onClick={onToggle} style={{ cursor: 'pointer' }}>Đăng ký ngay</span>
           </div>
         </div>
       </div>
