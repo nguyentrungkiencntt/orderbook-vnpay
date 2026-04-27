@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import './PromotionsPanel.css';
+import { useState } from 'react';
 import AddPromotion from './AddPromotion';
+import './PromotionsPanel.css';
 
 const promotionsData = [
   {

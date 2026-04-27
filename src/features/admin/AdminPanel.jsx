@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import AddBook from '../features/books/AddBook';
+import EditBook from '../features/books/EditBook';
+import PromotionsPanel from '../features/promotions/PromotionsPanel';
 import './AdminPanel.css';
-import AddBook from './AddBook';
-import EditBook from './EditBook';
 import OrdersPanel from './OrdersPanel';
 import UsersPanel from './UsersPanel';
-import PromotionsPanel from './PromotionsPanel';
 
 const initialBooksData = [
   {
