@@ -4,8 +4,8 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div>
-        <div className="logo font-serif" style={{ fontSize: '1rem', marginBottom: '5px' }}>The Digital Bibliophile</div>
-        <p>© 2024 The Digital Bibliophile. All rights reserved.</p>
+        <div className="logo font-serif" style={{ fontSize: '1rem', marginBottom: '5px' }}>The Intellectual Curator</div>
+        <p>© 2024 The Intellectual Curator. All rights reserved.</p>
       </div>
       <div className="footer-links">
         <a href="#">Our Story</a>

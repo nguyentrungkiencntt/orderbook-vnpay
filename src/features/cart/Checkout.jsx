@@ -18,13 +18,34 @@ const summaryItems = [
   }
 ];
 
-const Checkout = () => {
+const Checkout = ({ items }) => {
   const [paymentMethod, setPaymentMethod] = useState('vnpay');
+
+  // Fallback to static items if none provided
+  const displayItems = items && items.length > 0 ? items : summaryItems;
 
   const handleCheckout = (e) => {
     e.preventDefault();
     alert('Thanh toán thành công! Chuyển hướng...');
   };
+
+  const getPriceNumber = (price) => {
+    if (typeof price === 'number') return price;
+    if (!price) return 0;
+    return parseInt(price.toString().replace(/\D/g, ''));
+  };
+
+  const formatPrice = (amount) => {
+    return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+  };
+
+  const subtotal = displayItems.reduce((sum, item) => {
+    const price = getPriceNumber(item.priceStr || item.price);
+    return sum + (price * (item.qty || 1));
+  }, 0);
+  
+  const shipping = 0; // Free shipping
+  const total = subtotal + shipping;
 
   return (
     <div className="checkout-page">
@@ -133,13 +154,13 @@ const Checkout = () => {
           <h3 className="summary-title font-serif">Tóm tắt đơn hàng</h3>
           
           <div className="summary-item-list">
-            {summaryItems.map(item => (
+            {displayItems.map(item => (
               <div className="summary-item" key={item.id}>
                 <img src={item.img} alt={item.title} className="item-thumb" />
                 <div className="item-details">
                   <h4 className="font-serif">{item.title}</h4>
-                  <p>Số lượng: {item.qty}</p>
-                  <span>{item.priceStr}</span>
+                  <p>Số lượng: {item.qty || 1}</p>
+                  <span>{formatPrice(getPriceNumber(item.priceStr || item.price))}</span>
                 </div>
               </div>
             ))}
@@ -148,7 +169,7 @@ const Checkout = () => {
           <div className="summary-costs">
             <div className="cost-row">
               <span>Tạm tính</span>
-              <strong>1.230.000đ</strong>
+              <strong>{formatPrice(subtotal)}</strong>
             </div>
             <div className="cost-row">
               <span>Phí vận chuyển</span>
@@ -158,7 +179,7 @@ const Checkout = () => {
 
           <div className="total-row">
             <span className="label">Tổng cộng</span>
-            <span className="value">1.230.000đ</span>
+            <span className="value">{formatPrice(total)}</span>
           </div>
 
           <div className="buyer-protection">

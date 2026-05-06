@@ -228,7 +228,7 @@ const initialBooks = [
   }
 ];
 
-const Category = () => {
+const Category = ({ onBookClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState(['Văn học cổ điển']);
   const [maxPrice, setMaxPrice] = useState(1000000);
@@ -441,7 +441,7 @@ const Category = () => {
 
         <div className="products-grid">
           {filteredAndSortedBooks.length > 0 ? filteredAndSortedBooks.map((book) => (
-            <div className="product-card" key={book.id}>
+            <div className="product-card" key={book.id} onClick={() => onBookClick(book)} style={{ cursor: 'pointer' }}>
               <div className="product-img-wrap">
                 {book.badge && (
                   <div className={`product-badge ${book.badgeClass}`}>

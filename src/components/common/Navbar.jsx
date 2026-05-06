@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Navbar = ({ onToggle, isLoggedIn, onLogout, onHome, onCategory, onCart, onProfile, activeView }) => {
+const Navbar = ({ onLogin, onRegister, isLoggedIn, isAdmin, onLogout, onHome, onCategory, onCart, onProfile, onAdmin, activeView }) => {
   return (
     <nav className="navbar" style={{ padding: '20px 40px', borderBottom: '1px solid #eee' }}>
       <div 
         className="logo font-serif" 
-        onClick={onHome} 
+        onClick={(e) => { e.preventDefault(); onHome(); }} 
         style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 'bold' }}
       >
         The Intellectual Curator
@@ -13,8 +13,11 @@ const Navbar = ({ onToggle, isLoggedIn, onLogout, onHome, onCategory, onCart, on
       
       <div className="nav-actions">
         <div className="nav-links">
-          <a href="#" style={{ fontWeight: activeView === 'home' ? '600' : 'normal', borderBottom: activeView === 'home' ? '2px solid #1a1a1a' : 'none' }} onClick={onHome}>Trang chủ</a>
-          <a href="#" style={{ fontWeight: activeView === 'category' ? '600' : 'normal', borderBottom: activeView === 'category' ? '2px solid #1a1a1a' : 'none', color: activeView === 'category' ? '#0a4275' : 'inherit' }} onClick={onCategory}>Danh mục</a>
+          <a href="#" style={{ fontWeight: activeView === 'home' ? '600' : 'normal', borderBottom: activeView === 'home' ? '2px solid #1a1a1a' : 'none' }} onClick={(e) => { e.preventDefault(); onHome(); }}>Trang chủ</a>
+          <a href="#" style={{ fontWeight: activeView === 'category' ? '600' : 'normal', borderBottom: activeView === 'category' ? '2px solid #1a1a1a' : 'none', color: activeView === 'category' ? '#0a4275' : 'inherit' }} onClick={(e) => { e.preventDefault(); onCategory(); }}>Danh mục</a>
+          {isLoggedIn && isAdmin && (
+            <a href="#" style={{ fontWeight: activeView === 'admin' ? '600' : 'normal', borderBottom: activeView === 'admin' ? '2px solid #1a1a1a' : 'none', color: '#8b0000' }} onClick={(e) => { e.preventDefault(); onAdmin(); }}>Quản trị</a>
+          )}
           <a href="#">Blog</a>
           <a href="#">Liên hệ</a>
         </div>
@@ -63,13 +66,13 @@ const Navbar = ({ onToggle, isLoggedIn, onLogout, onHome, onCategory, onCart, on
           ) : (
             <>
               <button 
-                onClick={onToggle}
+                onClick={onRegister}
                 style={{ padding: '6px 16px', borderRadius: '20px', background: '#333', color: 'white', fontSize: '0.85rem', fontWeight: 'bold' }}
               >
                 Đăng ký
               </button>
               <button 
-                onClick={onToggle}
+                onClick={onLogin}
                 style={{ padding: '6px 16px', borderRadius: '20px', border: '1px solid #333', background: 'transparent', color: '#333', fontSize: '0.85rem', fontWeight: 'bold' }}
               >
                 Đăng nhập

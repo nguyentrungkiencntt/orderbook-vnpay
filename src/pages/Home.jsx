@@ -39,7 +39,7 @@ const books = [
   }
 ];
 
-const Home = () => {
+const Home = ({ onBookClick }) => {
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -111,7 +111,7 @@ const Home = () => {
         
         <div className="books-grid">
           {books.map(book => (
-            <div className="book-card" key={book.id}>
+            <div className="book-card" key={book.id} onClick={() => onBookClick(book)} style={{ cursor: 'pointer' }}>
               <div className="book-img-wrap">
                 <img src={book.img} alt={book.title} />
               </div>

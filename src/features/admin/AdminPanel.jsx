@@ -45,7 +45,7 @@ const initialBooksData = [
   }
 ];
 
-const AdminPanel = ({ onLogout }) => {
+const AdminPanel = ({ onLogout, onViewSite }) => {
   const [activeMenu, setActiveMenu] = useState('Sách');
   const [currentView, setCurrentView] = useState('list');
   const [editingBook, setEditingBook] = useState(null);
@@ -90,6 +90,9 @@ const AdminPanel = ({ onLogout }) => {
         </nav>
 
         <div className="sidebar-footer">
+          <div className="view-site-link" onClick={onViewSite} style={{ cursor: 'pointer', padding: '10px 20px', fontSize: '0.85rem', color: '#666', borderTop: '1px solid #eee', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span>🌐</span> Xem trang web
+          </div>
           <div className="admin-profile">
             <div className="profile-avatar">
               <img src="https://ui-avatars.com/api/?name=Admin&background=2D4633&color=fff" alt="Admin" />

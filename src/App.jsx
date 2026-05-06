@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/common/Navbar';
 import LoginForm from './features/auth/LoginForm';
 import RegisterForm from './features/auth/RegisterForm';
@@ -9,24 +9,83 @@ import Checkout from './features/cart/Checkout';
 import Footer from './components/common/Footer';
 import AdminPanel from './features/admin/AdminPanel';
 import UserProfile from './features/user/UserProfile';
+import BookDetail from './features/books/BookDetail';
 import './App.css';
 
 function App() {
   const [view, setView] = useState('home');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [isAdmin, setIsAdmin] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [prevView, setPrevView] = useState('home');
+  const [toast, setToast] = useState({ show: false, message: '' });
+  const [checkoutItems, setCheckoutItems] = useState([]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (event.state && event.state.view) {
+        setView(event.state.view);
+      } else {
+        setView('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    // Initial state
+    if (!window.history.state) {
+      window.history.replaceState({ view: 'home' }, '', '');
+    }
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Wrapper for setView that also updates history
+  const navigateTo = (newView) => {
+    window.history.pushState({ view: newView }, '', '');
+    setView(newView);
+  };
 
   const handleLogin = (isAdminRole = false) => {
     setIsLoggedIn(true);
     setIsAdmin(isAdminRole);
-    setView(isAdminRole ? 'admin' : 'home');
+    navigateTo(isAdminRole ? 'admin' : 'home');
+  };
+
+  const handleBookClick = (book) => {
+    setPrevView(view);
+    setSelectedBook(book);
+    navigateTo('book-detail');
+    window.scrollTo(0, 0);
+  };
+
+  const handleBuyNow = (book, qty) => {
+    const item = {
+      id: book.id,
+      title: book.title,
+      price: book.price,
+      img: book.img,
+      qty: qty
+    };
+    setCheckoutItems([item]);
+    if (isLoggedIn) {
+      navigateTo('checkout');
+    } else {
+      alert('Vui lòng đăng nhập để tiến hành thanh toán.');
+      navigateTo('login');
+    }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setIsAdmin(false);
-    setView('login');
+    navigateTo('login');
+  };
+
+  const showToast = (message) => {
+    setToast({ show: true, message });
+    setTimeout(() => setToast({ show: false, message: '' }), 3000);
   };
 
   return (
@@ -34,33 +93,88 @@ function App() {
       {view !== 'admin' && (
         <Navbar 
           activeView={view}
-          onToggle={() => setView('login')} 
+          onLogin={() => navigateTo('login')} 
+          onRegister={() => navigateTo('register')}
           isLoggedIn={isLoggedIn} 
+          isAdmin={isAdmin}
           onLogout={handleLogout} 
-          onHome={() => setView('home')}
-          onCategory={() => setView('category')}
-          onCart={() => setView('cart')}
-          onProfile={() => setView('profile')}
+          onHome={() => navigateTo('home')}
+          onCategory={() => navigateTo('category')}
+          onCart={() => {
+            if (isLoggedIn) {
+              navigateTo('cart');
+            } else {
+              alert('Vui lòng đăng nhập để xem giỏ hàng và đơn hàng của bạn.');
+              navigateTo('login');
+            }
+          }}
+          onProfile={() => {
+            if (isLoggedIn) {
+              navigateTo('profile');
+            } else {
+              navigateTo('login');
+            }
+          }}
+          onAdmin={() => {
+            if (isLoggedIn && isAdmin) {
+              navigateTo('admin');
+            } else {
+              navigateTo('login');
+            }
+          }}
         />
       )}
       {view === 'login' ? (
-        <LoginForm onToggle={() => setView('register')} onLoginSuccess={handleLogin} />
+        <LoginForm onToggle={() => navigateTo('register')} onLoginSuccess={handleLogin} />
       ) : view === 'register' ? (
-        <RegisterForm onToggle={() => setView('login')} />
+        <RegisterForm onToggle={() => navigateTo('login')} />
       ) : view === 'category' ? (
-        <Category />
+        <Category onBookClick={handleBookClick} />
+      ) : view === 'book-detail' ? (
+        <BookDetail 
+          book={selectedBook} 
+          onBack={() => navigateTo(prevView)} 
+          onHome={() => navigateTo('home')}
+          onCategory={() => navigateTo('category')}
+          onAddToCart={(book, qty) => {
+            showToast(`Đã thêm ${qty} cuốn "${book.title}" vào giỏ hàng thành công!`);
+          }} 
+          onBuyNow={handleBuyNow}
+        />
       ) : view === 'cart' ? (
-        <Cart onContinueShopping={() => setView('category')} onCheckout={() => setView('checkout')} />
+        isLoggedIn ? (
+          <Cart onContinueShopping={() => navigateTo('category')} onCheckout={() => navigateTo('checkout')} />
+        ) : (
+          <LoginForm onToggle={() => navigateTo('register')} onLoginSuccess={handleLogin} />
+        )
       ) : view === 'checkout' ? (
-        <Checkout />
+        isLoggedIn ? (
+          <Checkout items={checkoutItems} />
+        ) : (
+          <LoginForm onToggle={() => navigateTo('register')} onLoginSuccess={handleLogin} />
+        )
       ) : view === 'profile' ? (
-        <UserProfile />
+        isLoggedIn ? (
+          <UserProfile />
+        ) : (
+          <LoginForm onToggle={() => navigateTo('register')} onLoginSuccess={handleLogin} />
+        )
       ) : view === 'admin' ? (
-        <AdminPanel onLogout={handleLogout} />
+        <AdminPanel onLogout={handleLogout} onViewSite={() => navigateTo('home')} />
       ) : (
-        <Home />
+        <Home onBookClick={handleBookClick} />
       )}
       {view !== 'admin' && <Footer />}
+      
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className="toast-notification">
+          <div className="toast-content">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>{toast.message}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
