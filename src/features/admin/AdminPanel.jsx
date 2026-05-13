@@ -4,6 +4,8 @@ import EditBook from '../books/EditBook';
 import PromotionsPanel from '../promotions/PromotionsPanel';
 import './AdminPanel.css';
 import OrdersPanel from './OrdersPanel';
+import ReportsPanel from './ReportsPanel';
+import SettingsPanel from './SettingsPanel';
 import UsersPanel from './UsersPanel';
 
 const initialBooksData = [
@@ -46,7 +48,7 @@ const initialBooksData = [
 ];
 
 const AdminPanel = ({ onLogout, onViewSite }) => {
-  const [activeMenu, setActiveMenu] = useState('Sách');
+  const [activeMenu, setActiveMenu] = useState('Kho hàng');
   const [currentView, setCurrentView] = useState('list');
   const [editingBook, setEditingBook] = useState(null);
   const [books, setBooks] = useState(initialBooksData);
@@ -60,12 +62,14 @@ const AdminPanel = ({ onLogout, onViewSite }) => {
   };
 
   const menuItems = [
-    { name: 'Dashboard', icon: '📊' },
-    { name: 'Sách', icon: '📚' },
+    { name: 'Bảng điều khiển', icon: '📊' },
+    { name: 'Kho hàng', icon: '📚' },
     { name: 'Đơn hàng', icon: '🛍️' },
-    { name: 'Khách hàng', icon: '👥' },
     { name: 'Khuyến mãi', icon: '🎁' },
-    { name: 'Cấu hình', icon: '⚙️' }
+    { name: 'Khách hàng', icon: '👥' },
+    { name: 'Báo cáo', icon: '📈' },
+    { name: 'Cài đặt', icon: '⚙️' },
+    { name: 'Hỗ trợ', icon: '❓' }
   ];
 
   return (
@@ -111,8 +115,12 @@ const AdminPanel = ({ onLogout, onViewSite }) => {
           <PromotionsPanel />
         ) : activeMenu === 'Khách hàng' ? (
           <UsersPanel />
+        ) : activeMenu === 'Cài đặt' || activeMenu === 'Cấu hình' ? (
+          <SettingsPanel />
         ) : activeMenu === 'Đơn hàng' ? (
           <OrdersPanel />
+        ) : activeMenu === 'Báo cáo' || activeMenu === 'Dashboard' ? (
+          <ReportsPanel />
         ) : (
           <>
             {currentView === 'list' ? (

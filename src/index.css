@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root {
   --color-primary: #2D4633;
@@ -8,11 +8,15 @@
   --color-text-muted: #6B6B6B;
   --color-border: #E5E5E5;
   --color-white: #FFFFFF;
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Outfit', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
   --transition: all 0.3s ease;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   --border-radius: 12px;
+}
+
+html {
+  font-size: 15px;
 }
 
 * {
