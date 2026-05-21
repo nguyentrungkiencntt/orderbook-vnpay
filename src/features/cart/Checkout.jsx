@@ -29,6 +29,34 @@ const Checkout = ({ items }) => {
     alert('Thanh toán thành công! Chuyển hướng...');
   };
 
+  const createCheckoutSession = async () => {
+    // Prepare items for server: amount in VND (integer), quantity
+    const lineItems = displayItems.map(item => ({
+      name: item.title,
+      amount: getPriceNumber(item.priceStr || item.price),
+      quantity: item.qty || 1,
+      image: item.img
+    }));
+
+    try {
+      const res = await fetch('http://localhost:4242/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: lineItems })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location = data.url; // redirect to Stripe Checkout
+      } else {
+        console.error('No checkout url', data);
+        alert('Không thể tạo phiên thanh toán. Vui lòng thử lại.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối tới máy chủ thanh toán.');
+    }
+  };
+
   const getPriceNumber = (price) => {
     if (typeof price === 'number') return price;
     if (!price) return 0;
@@ -134,7 +162,7 @@ const Checkout = ({ items }) => {
                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#005A9E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '10px' }}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     <h5>Thanh toán an toàn qua cổng VNPAY</h5>
                     <p>Hỗ trợ các loại thẻ ATM, Visa, Mastercard và ví điện tử</p>
-                    <button type="button" className="btn-vnpay" onClick={handleCheckout}>
+                    <button type="button" className="btn-vnpay" onClick={createCheckoutSession}>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                       THANH TOÁN VỚI VNPAY
                     </button>
@@ -187,7 +215,7 @@ const Checkout = ({ items }) => {
             <span>Đơn hàng của bạn được bảo vệ bởi chính sách <strong>The Intellectual Curator</strong>. Hoàn trả miễn phí trong vòng 7 ngày.</span>
           </div>
 
-          <button className="btn-continue-checkout" onClick={handleCheckout}>
+          <button className="btn-continue-checkout" onClick={createCheckoutSession}>
             TIẾP TỤC &rarr;
           </button>
         </div>

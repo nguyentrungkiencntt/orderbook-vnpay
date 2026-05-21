@@ -7,6 +7,8 @@ import OrdersPanel from './OrdersPanel';
 import ReportsPanel from './ReportsPanel';
 import SettingsPanel from './SettingsPanel';
 import UsersPanel from './UsersPanel';
+import CategoryPanel from './CategoryPanel';
+
 
 const initialBooksData = [
   {
@@ -65,7 +67,9 @@ const AdminPanel = ({ onLogout, onViewSite }) => {
     { name: 'Bảng điều khiển', icon: '📊' },
     { name: 'Kho hàng', icon: '📚' },
     { name: 'Đơn hàng', icon: '🛍️' },
+    { name: 'Thể loại', icon: '📂' },
     { name: 'Khuyến mãi', icon: '🎁' },
+
     { name: 'Khách hàng', icon: '👥' },
     { name: 'Báo cáo', icon: '📈' },
     { name: 'Cài đặt', icon: '⚙️' },
@@ -119,7 +123,10 @@ const AdminPanel = ({ onLogout, onViewSite }) => {
           <SettingsPanel />
         ) : activeMenu === 'Đơn hàng' ? (
           <OrdersPanel />
+        ) : activeMenu === 'Thể loại' ? (
+          <CategoryPanel />
         ) : activeMenu === 'Báo cáo' || activeMenu === 'Dashboard' ? (
+
           <ReportsPanel />
         ) : (
           <>

@@ -10,6 +10,7 @@ import Footer from './components/common/Footer';
 import AdminPanel from './features/admin/AdminPanel';
 import UserProfile from './features/user/UserProfile';
 import BookDetail from './features/books/BookDetail';
+import Complete from './features/cart/Complete';
 import './App.css';
 
 function App() {
@@ -33,8 +34,12 @@ function App() {
 
     window.addEventListener('popstate', handlePopState);
     
-    // Initial state
-    if (!window.history.state) {
+    // Initial state: if the app was loaded on a path like /complete, reflect it
+    const pathname = window.location.pathname || '';
+    if (pathname.startsWith('/complete')) {
+      setView('complete');
+      window.history.replaceState({ view: 'complete' }, '', pathname + window.location.search);
+    } else if (!window.history.state) {
       window.history.replaceState({ view: 'home' }, '', '');
     }
 
@@ -75,6 +80,12 @@ function App() {
       alert('Vui lòng đăng nhập để tiến hành thanh toán.');
       navigateTo('login');
     }
+  };
+
+  // Navigate to a special complete view
+  const navigateToComplete = () => {
+    window.history.pushState({ view: 'complete' }, '', '/complete');
+    setView('complete');
   };
 
   const handleLogout = () => {
@@ -153,6 +164,8 @@ function App() {
         ) : (
           <LoginForm onToggle={() => navigateTo('register')} onLoginSuccess={handleLogin} />
         )
+      ) : view === 'complete' ? (
+        <Complete />
       ) : view === 'profile' ? (
         isLoggedIn ? (
           <UserProfile />
